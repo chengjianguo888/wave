@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 API Testing Script
 Quick script to test all API endpoints

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Utility script to generate sample wave images for testing
 """

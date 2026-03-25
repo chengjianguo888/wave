@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Database layer for Visual Wave Detection System
 Handles user management and detection history

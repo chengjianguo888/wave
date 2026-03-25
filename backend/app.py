@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Visual Wave Detection System - Backend API
 Main Flask application with authentication and wave detection endpoints

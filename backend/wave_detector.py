@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Wave Detection Engine
 Implements multiple algorithms for visual wave detection
