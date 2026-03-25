@@ -85,6 +85,8 @@ pip install -r requirements.txt
 python run.py
 ```
 
+> 提示: 直接运行 `python app.py` 也会通过 Streamlit 启动，默认地址 http://localhost:8501，可用 `--server.port`/`--server.address` 或环境变量 `STREAMLIT_SERVER_PORT`/`STREAMLIT_SERVER_ADDRESS` 自定义。
+
 ---
 
 ### 旧版本 (Flask + React)
