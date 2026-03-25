@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import axios from '../api/axios'
 import './DetectionHistory.css'
 
 function DetectionHistory() {
   const [history, setHistory] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
 
@@ -12,20 +13,16 @@ function DetectionHistory() {
     loadHistory()
   }, [page])
 
-  const getAuthHeaders = () => ({
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
-    }
-  })
-
   const loadHistory = async () => {
     setLoading(true)
+    setError(null)
     try {
-      const response = await axios.get(`/api/detections/history?page=${page}&per_page=10`, getAuthHeaders())
+      const response = await axios.get(`/api/detections/history?page=${page}&per_page=10`)
       setHistory(response.data.detections)
       setTotal(response.data.total)
     } catch (err) {
       console.error('Failed to load history:', err)
+      setError(err.message || 'Failed to load detection history')
     } finally {
       setLoading(false)
     }
@@ -34,7 +31,6 @@ function DetectionHistory() {
   const handleExport = async (detectionId) => {
     try {
       const response = await axios.get(`/api/detections/${detectionId}/export?format=csv`, {
-        ...getAuthHeaders(),
         responseType: 'blob'
       })
 
@@ -47,7 +43,8 @@ function DetectionHistory() {
       link.click()
       link.remove()
     } catch (err) {
-      alert('Failed to export detection')
+      console.error('Export failed:', err)
+      alert(err.message || 'Failed to export detection')
     }
   }
 
@@ -57,6 +54,20 @@ function DetectionHistory() {
 
   if (loading) {
     return <div className="loading">Loading history...</div>
+  }
+
+  if (error) {
+    return (
+      <div className="detection-panel">
+        <h2>Detection History</h2>
+        <div style={{ textAlign: 'center', padding: '40px' }}>
+          <p style={{ color: '#f44336', marginBottom: '10px' }}>{error}</p>
+          <button onClick={loadHistory} className="btn-primary">
+            Retry
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
