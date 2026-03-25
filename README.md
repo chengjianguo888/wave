@@ -1,16 +1,18 @@
-# Visual Wave Detection System
+# Visual Wave Detection System (纯Python版本)
 
-一个基于计算机视觉的波浪检测系统，提供多种检测算法和实时分析功能。
+一个基于计算机视觉的波浪检测系统，**纯Python实现**，可在PyCharm中直接运行！
 
-## 系统特性
+## 🎯 核心特点
 
-### 核心功能
-- **多算法支持**: 边缘检测、频率分析、光流法、AI检测
-- **用户认证**: 安全的登录注册系统，JWT token认证
-- **实时检测**: 支持图像上传和实时波浪检测
-- **可视化分析**: 交互式图表和波浪标注
-- **历史记录**: 保存所有检测历史，支持导出
-- **数据导出**: CSV/JSON格式导出检测结果
+- ✅ **纯Python实现**: 无需JavaScript、Node.js或Docker
+- ✅ **PyCharm一键运行**: 打开run.py直接运行
+- ✅ **Streamlit界面**: 简洁美观的Web UI，全部用Python编写
+- ✅ **多算法支持**: 边缘检测、频率分析、光流法、AI检测
+- ✅ **用户认证**: 安全的登录注册系统
+- ✅ **实时检测**: 支持图像上传和实时波浪检测
+- ✅ **可视化分析**: 交互式图表和波浪标注
+- ✅ **历史记录**: 保存所有检测历史，支持导出
+- ✅ **数据导出**: CSV/JSON格式导出检测结果
 
 ### 创新特性
 1. **多算法融合**: 四种不同的检测算法适应不同场景
@@ -23,48 +25,76 @@
 3. **实时可视化**: 波浪边界标注和统计图表
 4. **数据持久化**: 完整的用户数据和检测历史管理
 
-## 系统架构
+## 系统架构 (纯Python版本)
 
 ```
 wave-detection-system/
-├── backend/                # Python Flask后端
-│   ├── app.py             # 主应用程序
-│   ├── database.py        # 数据库层
+├── app.py                  # Streamlit主应用（纯Python UI）
+├── run.py                  # PyCharm启动脚本
+├── requirements.txt        # Python依赖
+├── backend/                # 后端模块
 │   ├── wave_detector.py   # 波浪检测引擎
-│   ├── config.py          # 配置文件
-│   └── requirements.txt   # Python依赖
-├── frontend/              # React前端
-│   ├── src/
-│   │   ├── components/    # React组件
-│   │   │   ├── Login.jsx          # 登录界面
-│   │   │   ├── Dashboard.jsx      # 主仪表板
-│   │   │   ├── WaveVisualizer.jsx # 波浪可视化
-│   │   │   └── DetectionHistory.jsx # 历史记录
-│   │   ├── App.jsx        # 主应用
-│   │   └── main.jsx       # 入口文件
-│   ├── package.json       # Node.js依赖
-│   └── vite.config.js     # Vite配置
-└── docker-compose.yml     # Docker部署配置
+│   ├── database.py        # 数据库层
+│   └── config.py          # 配置文件
+└── PYTHON_GUIDE.md        # Python版本详细指南
 ```
 
-## 技术栈
+## 技术栈 (纯Python)
 
-### 后端
-- **Flask**: Web框架
+- **Streamlit**: Python Web应用框架，替代React前端
 - **OpenCV**: 图像处理和波浪检测
 - **NumPy/SciPy**: 科学计算和信号处理
 - **SQLite**: 数据库
-- **JWT**: 用户认证
+- **Pandas**: 数据处理和导出
+- **Werkzeug**: 密码加密
 
-### 前端
-- **React**: UI框架
-- **Chart.js**: 数据可视化
-- **Axios**: HTTP客户端
-- **Vite**: 构建工具
+## 快速启动 (纯Python版本)
 
-## 快速启动
+### 方法1: 在PyCharm中运行 (推荐) ⭐
 
-### 方法1: Docker部署 (推荐)
+#### 步骤1: 安装依赖
+```bash
+pip install -r requirements.txt
+```
+
+#### 步骤2: 运行应用
+**选项A: 使用启动脚本**
+```bash
+python run.py
+```
+
+**选项B: 直接运行Streamlit**
+```bash
+streamlit run app.py
+```
+
+**选项C: 在PyCharm中一键运行**
+1. 在PyCharm中打开 `run.py` 文件
+2. 点击右上角的绿色"运行"按钮 ▶️
+3. 或者按快捷键 `Shift+F10`
+
+应用将在浏览器中自动打开: http://localhost:8501
+
+### 方法2: 命令行运行
+
+```bash
+# 安装依赖
+pip install -r requirements.txt
+
+# 运行应用
+python run.py
+```
+
+---
+
+### 旧版本 (Flask + React)
+
+如果你需要使用旧版本的Flask REST API + React前端架构，请查看以下文档：
+
+<details>
+<summary>点击展开旧版本运行方式</summary>
+
+### Docker部署
 
 ```bash
 # 启动整个系统
@@ -75,7 +105,7 @@ docker-compose up -d
 # 后端API: http://localhost:5000
 ```
 
-### 方法2: 手动部署
+### 手动部署
 
 #### 后端设置
 
@@ -107,92 +137,48 @@ npm run dev
 
 前端将在 http://localhost:3000 运行
 
-## 使用指南
+</details>
 
-### 1. 用户注册/登录
-- 访问系统首页
-- 点击"Register"创建新账户
-- 或使用已有账户登录
+## 使用指南 (纯Python版本)
 
-### 2. 波浪检测
-- 在Dashboard中点击上传区域或拖拽图像文件
-- 选择检测算法:
+### 1. 启动应用
+
+```bash
+# 方式1: 使用启动脚本
+python run.py
+
+# 方式2: 直接运行Streamlit
+streamlit run app.py
+
+# 方式3: 在PyCharm中打开run.py，点击运行按钮
+```
+
+### 2. 用户注册/登录
+- 访问 http://localhost:8501
+- 点击"注册 (Register)"标签创建新账户
+- 或使用已有账户在"登录 (Login)"标签登录
+
+### 3. 波浪检测
+- 登录后，在主页面上传图像文件
+- 在左侧边栏选择检测算法:
   - **Edge Detection**: 适合清晰边界的波浪
   - **Frequency Analysis**: 适合周期性波浪模式
   - **Optical Flow**: 适合运动波浪检测
   - **AI Detection**: 智能识别复杂波浪模式
-- 调整灵敏度参数（0-100%）
-- 点击"Start Detection"开始分析
+- 调整灵敏度参数（0.0-1.0）
+- 点击"开始检测 (Start Detection)"开始分析
 
-### 3. 查看结果
+### 4. 查看结果
 - 波浪数量统计
 - 平均振幅和频率
 - 置信度评分
-- 可视化标注图像
+- 波浪详情表格
 - 波浪特征图表
 
-### 4. 历史记录
-- 切换到"Detection History"标签
+### 5. 历史记录
+- 切换到"检测历史 (Detection History)"页面
 - 查看所有历史检测记录
-- 导出数据为CSV格式
-
-## API文档
-
-### 认证接口
-
-#### POST /api/auth/register
-注册新用户
-```json
-{
-  "username": "user123",
-  "password": "password",
-  "email": "user@example.com"
-}
-```
-
-#### POST /api/auth/login
-用户登录
-```json
-{
-  "username": "user123",
-  "password": "password"
-}
-```
-
-返回:
-```json
-{
-  "access_token": "jwt_token",
-  "user": {
-    "id": 1,
-    "username": "user123",
-    "email": "user@example.com"
-  }
-}
-```
-
-### 检测接口
-
-#### POST /api/detect/upload
-上传图像进行检测 (需要认证)
-
-参数:
-- `file`: 图像文件
-- `algorithm`: 算法类型 (edge_detection, frequency_analysis, optical_flow, ai_detection)
-- `sensitivity`: 灵敏度 (0.0-1.0)
-
-#### GET /api/detections/history
-获取检测历史 (需要认证)
-
-查询参数:
-- `page`: 页码
-- `per_page`: 每页数量
-
-#### GET /api/algorithms
-获取可用算法列表 (需要认证)
-
-#### GET /api/stats/summary
-获取用户统计信息 (需要认证)
+- 导出数据为CSV或JSON格式
 
 ## 检测算法说明
 
@@ -220,82 +206,38 @@ npm run dev
 - **优点**: 适应性强，准确度高
 - **参数**: sensitivity控制置信度阈值
 
-## 环境变量配置
+## PyCharm配置说明
 
-创建 `.env` 文件配置系统参数:
+### 创建运行配置
 
-```env
-# Security
-SECRET_KEY=your-secret-key-here
-JWT_SECRET_KEY=your-jwt-secret-key
+1. 打开 **Run → Edit Configurations...**
+2. 点击 **+** → **Python**
+3. 配置如下:
+   - **Name**: Wave Detection System
+   - **Script path**: 选择 `run.py` 文件的完整路径
+   - **Python interpreter**: 选择项目的Python解释器
+   - **Working directory**: 项目根目录
+4. 点击 **OK** 保存
 
-# Database
-DATABASE_PATH=wave_detection.db
+现在你可以直接点击运行按钮启动应用！
 
-# Upload
-UPLOAD_FOLDER=uploads
+## 系统要求
 
-# AI Model
-AI_MODEL_PATH=models/wave_detection_model.pth
-```
+- **Python版本**: 3.8 或更高
+- **操作系统**: Windows, macOS, Linux
+- **内存**: 最低2GB RAM
+- **IDE**: PyCharm (推荐), VS Code, 或任何Python IDE
 
-## 开发指南
+## 详细文档
 
-### 添加新的检测算法
+📖 **查看完整Python使用指南**: [PYTHON_GUIDE.md](PYTHON_GUIDE.md)
 
-1. 在 `backend/wave_detector.py` 中添加新方法:
-```python
-def _new_algorithm(self, image: np.ndarray, **kwargs) -> Dict:
-    # Your algorithm implementation
-    return {
-        'wave_count': wave_count,
-        'avg_amplitude': avg_amplitude,
-        'avg_frequency': avg_frequency,
-        'confidence_score': confidence,
-        'waves': waves
-    }
-```
-
-2. 在 `algorithms` 字典中注册:
-```python
-self.algorithms['new_algorithm'] = self._new_algorithm
-```
-
-3. 在API中添加算法描述 (app.py)
-
-### 扩展前端功能
-
-前端组件位于 `frontend/src/components/`:
-- 修改 `Dashboard.jsx` 添加新功能面板
-- 修改 `WaveVisualizer.jsx` 添加新的可视化方式
-- 添加新组件到 `components/` 目录
-
-## 安全性
-
-- 密码使用bcrypt哈希存储
-- JWT token认证保护API
-- 文件上传大小限制(50MB)
-- SQL注入防护
-- XSS防护
-
-## 性能优化
-
-- 图像处理使用OpenCV优化
-- 数据库索引优化查询
-- 前端懒加载和代码分割
-- 分页减少数据传输
-
-## 测试
-
-```bash
-# 后端测试
-cd backend
-pytest tests/
-
-# 前端测试
-cd frontend
-npm test
-```
+包含以下内容:
+- PyCharm详细配置步骤
+- 功能使用说明
+- 故障排除
+- 开发指南
+- 常见问题解答
 
 ## 贡献指南
 

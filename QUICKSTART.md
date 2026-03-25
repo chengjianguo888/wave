@@ -1,157 +1,157 @@
-# Visual Wave Detection System - Quick Start Guide
+# 快速开始指南 (纯Python版本)
 
-## 系统概述
-视觉波浪检测系统是一个基于计算机视觉技术的Web应用，能够自动检测和分析图像中的波浪模式。
+## 🚀 3步快速启动
 
-## 快速安装
+### 第一步: 安装Python依赖
 
-### 使用Docker (推荐)
 ```bash
-# 克隆仓库
-git clone <repository-url>
-cd wave
-
-# 启动系统
-docker-compose up -d
-
-# 访问应用
-# 前端: http://localhost:3000
-# 后端: http://localhost:5000
-```
-
-### 手动安装
-
-#### 1. 安装后端
-```bash
-cd backend
-
-# 创建虚拟环境
-python3 -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# 安装依赖
 pip install -r requirements.txt
-
-# 配置环境变量 (可选)
-cp .env.example .env
-# 编辑 .env 文件设置密钥
-
-# 启动服务器
-python app.py
 ```
 
-#### 2. 安装前端
+如果安装速度慢，可以使用国内镜像源：
 ```bash
-cd frontend
-
-# 安装依赖
-npm install
-
-# 启动开发服务器
-npm run dev
+pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
-#### 3. 使用启动脚本（Linux/Mac）
+### 第二步: 运行应用
+
+**方式1: 使用启动脚本 (推荐)**
 ```bash
-chmod +x start.sh
-./start.sh
+python run.py
 ```
 
-## 首次使用
-
-1. **访问系统**: 打开浏览器访问 http://localhost:3000
-
-2. **注册账户**:
-   - 点击"Register"
-   - 输入用户名、邮箱和密码
-   - 点击注册按钮
-
-3. **登录系统**:
-   - 使用刚注册的账户登录
-   - 进入主Dashboard
-
-4. **开始检测**:
-   - 点击上传区域或拖拽图像文件
-   - 选择检测算法
-   - 调整灵敏度
-   - 点击"Start Detection"
-
-5. **查看结果**:
-   - 查看检测统计
-   - 浏览可视化结果
-   - 查看历史记录
-
-## 示例数据
-
-生成示例波浪图像用于测试:
+**方式2: 直接运行Streamlit**
 ```bash
-cd backend
-python generate_samples.py
+streamlit run app.py
 ```
 
-这将在 `backend/samples/` 目录生成三种类型的示例图像:
-- sine_wave.png: 正弦波图像
-- ocean_wave.png: 海浪图像
-- ripple_wave.png: 涟漪图像
+**方式3: 在PyCharm中运行**
+1. 用PyCharm打开项目
+2. 打开 `run.py` 文件
+3. 点击右上角的绿色运行按钮 ▶️
+4. 或按快捷键 `Shift+F10`
 
-## 测试系统
+### 第三步: 访问应用
 
-### 后端测试
-```bash
-cd backend
-pip install -r tests/requirements.txt
-pytest tests/
-```
+浏览器会自动打开: **http://localhost:8501**
 
-### API测试
-```bash
-cd backend
-# 确保服务器正在运行
-python test_api.py
-```
+---
 
-## 常见问题解决
+## 💡 首次使用
 
-### 端口已被占用
-如果5000或3000端口被占用:
-- 修改 docker-compose.yml 中的端口映射
-- 或在本地运行时指定不同端口
+### 1. 注册账户
+- 点击"注册 (Register)"标签
+- 填写用户名、邮箱和密码
+- 点击"注册 (Register)"按钮
 
-### 依赖安装失败
-**后端**:
+### 2. 登录系统
+- 切换到"登录 (Login)"标签
+- 输入用户名和密码
+- 点击"登录 (Login)"按钮
+
+### 3. 开始检测波浪
+- 点击"Browse files"上传图像（支持JPG, PNG）
+- 在左侧边栏选择检测算法:
+  - 边缘检测 (Edge Detection)
+  - 频率分析 (Frequency Analysis)
+  - 光流法 (Optical Flow)
+  - AI检测 (AI Detection)
+- 调整灵敏度参数（0.0-1.0）
+- 点击"开始检测 (Start Detection)"按钮
+
+### 4. 查看结果
+检测完成后会显示：
+- 波浪数量
+- 平均振幅
+- 平均频率
+- 置信度评分
+- 波浪详情表格
+- 特征图表
+
+---
+
+## 📋 核心功能
+
+- ✅ **纯Python实现** - 无需Node.js或Docker
+- ✅ **PyCharm直接运行** - 一键启动
+- ✅ **用户认证系统** - 安全的注册登录
+- ✅ **4种检测算法** - 适应不同场景
+- ✅ **实时波浪检测** - 上传即分析
+- ✅ **可视化展示** - 图表和数据表格
+- ✅ **历史记录管理** - 完整的检测历史
+- ✅ **数据导出** - CSV/JSON格式
+
+---
+
+## ⚙️ 系统要求
+
+- **Python版本**: 3.8 或更高
+- **操作系统**: Windows, macOS, Linux
+- **内存**: 最低2GB RAM (推荐4GB)
+- **IDE**: PyCharm (推荐), VS Code, 或任何Python IDE
+
+---
+
+## 🔧 常见问题
+
+### 问题1: 依赖安装失败
+
 ```bash
 # 升级pip
 pip install --upgrade pip
 
-# 如果OpenCV安装失败
-pip install opencv-python-headless
+# 重新安装
+pip install -r requirements.txt
 ```
 
-**前端**:
+### 问题2: 端口8501被占用
+
+修改 `run.py` 文件中的端口号:
+```python
+'--server.port', '8502',  # 改为其他可用端口
+```
+
+或在命令行指定:
 ```bash
-# 清除缓存
-npm cache clean --force
-rm -rf node_modules package-lock.json
-npm install
+streamlit run app.py --server.port 8502
 ```
 
-### 数据库初始化
-数据库会在首次启动时自动创建。如需重置:
+### 问题3: OpenCV导入错误
+
 ```bash
-rm backend/wave_detection.db
-# 重启后端服务器
+pip uninstall opencv-python
+pip install opencv-python==4.9.0.80
 ```
 
-## 下一步
+### 问题4: 数据库错误
 
-- 查看完整文档: `docs/USER_GUIDE.md`
-- 了解技术细节: `docs/TECHNICAL_DOCS.md`
-- 查看API文档: README.md中的API部分
+删除并重新创建数据库:
+```bash
+rm wave_detection.db
+python run.py  # 会自动创建新数据库
+```
 
-## 获取帮助
+---
 
-- 查看文档目录
-- 提交Issue
-- 查看示例代码
+## 📚 更多信息
 
-祝使用愉快！
+- **完整Python指南**: [PYTHON_GUIDE.md](PYTHON_GUIDE.md)
+- **详细README**: [README.md](README.md)
+- **系统架构**: [ARCHITECTURE.md](ARCHITECTURE.md)
+- **功能列表**: [FEATURES.md](FEATURES.md)
+
+---
+
+## 🎯 与旧版本对比
+
+| 特性 | 旧版本 | 新版本 (纯Python) |
+|------|--------|------------------|
+| 前端 | React + JavaScript | Streamlit (Python) |
+| 后端 | Flask REST API | 集成在Streamlit |
+| 启动 | Docker/多步骤 | 单个命令 |
+| 依赖 | Python + Node.js | 仅Python |
+| PyCharm | ❌ 复杂配置 | ✅ 一键运行 |
+
+---
+
+**享受纯Python开发的便利！🌊**
