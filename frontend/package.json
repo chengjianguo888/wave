@@ -1,0 +1,28 @@
+{
+  "name": "wave-detection-frontend",
+  "version": "1.0.0",
+  "description": "Visual Wave Detection System - Frontend",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.0",
+    "axios": "^1.6.5",
+    "chart.js": "^4.4.1",
+    "react-chartjs-2": "^5.2.0",
+    "recharts": "^2.10.3",
+    "antd": "^5.12.8",
+    "@ant-design/icons": "^5.2.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.11"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}
