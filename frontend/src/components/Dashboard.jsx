@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import axios from 'axios'
+import axios from '../api/axios'
 import WaveVisualizer from './WaveVisualizer'
 import DetectionHistory from './DetectionHistory'
 import './Dashboard.css'
@@ -14,36 +14,51 @@ function Dashboard({ user, onLogout }) {
   const [sensitivity, setSensitivity] = useState(0.5)
   const [detectionResult, setDetectionResult] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [initialLoading, setInitialLoading] = useState(true)
   const [algorithms, setAlgorithms] = useState([])
   const [activeTab, setActiveTab] = useState('detect')
+  const [error, setError] = useState(null)
   const fileInputRef = useRef(null)
 
   useEffect(() => {
-    loadStats()
-    loadAlgorithms()
+    loadInitialData()
   }, [])
 
-  const getAuthHeaders = () => ({
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
+  const loadInitialData = async () => {
+    setInitialLoading(true)
+    setError(null)
+    try {
+      await Promise.all([loadStats(), loadAlgorithms()])
+    } catch (err) {
+      console.error('Failed to load initial data:', err)
+      setError(err.message || 'Failed to load initial data')
+    } finally {
+      setInitialLoading(false)
     }
-  })
+  }
 
   const loadStats = async () => {
     try {
-      const response = await axios.get('/api/stats/summary', getAuthHeaders())
+      const response = await axios.get('/api/stats/summary')
       setStats(response.data)
     } catch (err) {
       console.error('Failed to load stats:', err)
+      // Don't throw, let component load anyway
     }
   }
 
   const loadAlgorithms = async () => {
     try {
-      const response = await axios.get('/api/algorithms', getAuthHeaders())
+      const response = await axios.get('/api/algorithms')
       setAlgorithms(response.data.algorithms)
     } catch (err) {
       console.error('Failed to load algorithms:', err)
+      // Set default algorithms as fallback
+      setAlgorithms([{
+        id: 'edge_detection',
+        name: 'Edge Detection',
+        description: 'Classical edge detection using Canny algorithm'
+      }])
     }
   }
 
@@ -95,15 +110,16 @@ function Dashboard({ user, onLogout }) {
 
       const response = await axios.post('/api/detect/upload', formData, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'multipart/form-data'
-        }
+        },
+        timeout: 30000 // 30 seconds for file upload
       })
 
       setDetectionResult(response.data.result)
       loadStats() // Refresh stats
     } catch (err) {
-      alert(err.response?.data?.error || 'Detection failed')
+      console.error('Detection failed:', err)
+      alert(err.message || 'Detection failed')
     } finally {
       setLoading(false)
     }
@@ -141,7 +157,24 @@ function Dashboard({ user, onLogout }) {
         </div>
       </div>
 
-      {stats && (
+      {initialLoading && (
+        <div className="loading" style={{ textAlign: 'center', padding: '40px' }}>
+          Loading dashboard...
+        </div>
+      )}
+
+      {error && !initialLoading && (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <p style={{ color: '#f44336', marginBottom: '10px' }}>{error}</p>
+          <button onClick={loadInitialData} className="btn-primary">
+            Retry
+          </button>
+        </div>
+      )}
+
+      {!initialLoading && !error && (
+        <>
+          {stats && (
         <div className="stats-grid">
           <div className="stat-card">
             <h3>Total Detections</h3>
@@ -279,6 +312,8 @@ function Dashboard({ user, onLogout }) {
 
       {activeTab === 'history' && (
         <DetectionHistory />
+      )}
+        </>
       )}
     </div>
   )

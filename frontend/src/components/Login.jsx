@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+import axios from '../api/axios'
 import './Login.css'
 
 function Login({ onLogin }) {
@@ -43,7 +43,8 @@ function Login({ onLogin }) {
         onLogin(access_token, user)
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'An error occurred')
+      console.error('Auth error:', err)
+      setError(err.response?.data?.error || err.message || 'An error occurred')
     } finally {
       setLoading(false)
     }
