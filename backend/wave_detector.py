@@ -36,14 +36,14 @@ class WaveDetector:
         Returns:
             Dictionary containing detection results
         """
+        # Select and run algorithm
+        if algorithm not in self.algorithms:
+            raise ValueError(f'Unknown algorithm: {algorithm}')
+
         # Read image
         image = cv2.imread(filepath)
         if image is None:
             raise ValueError('Failed to read image file')
-
-        # Select and run algorithm
-        if algorithm not in self.algorithms:
-            raise ValueError(f'Unknown algorithm: {algorithm}')
 
         detection_func = self.algorithms[algorithm]
         result = detection_func(image, **kwargs)

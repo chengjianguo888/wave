@@ -4,6 +4,8 @@ import WaveVisualizer from './WaveVisualizer'
 import DetectionHistory from './DetectionHistory'
 import './Dashboard.css'
 
+const DEMO_IMAGE_DATA_URL = 'data:image/png;base64,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'
+
 function Dashboard({ user, onLogout }) {
   const [stats, setStats] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null)
@@ -107,6 +109,28 @@ function Dashboard({ user, onLogout }) {
     }
   }
 
+  const handleDemoDetect = async () => {
+    setPreviewUrl(DEMO_IMAGE_DATA_URL)
+    setSelectedFile(null)
+    setDetectionResult(null)
+    setLoading(true)
+
+    try {
+      const response = await axios.post('/api/detect/realtime', {
+        image_data: DEMO_IMAGE_DATA_URL,
+        algorithm,
+        sensitivity
+      }, getAuthHeaders())
+
+      setDetectionResult(response.data.result)
+      loadStats()
+    } catch (err) {
+      alert(err.response?.data?.error || 'Detection failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="dashboard">
       <div className="dashboard-header">
@@ -183,6 +207,24 @@ function Dashboard({ user, onLogout }) {
             style={{ display: 'none' }}
           />
 
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', margin: '12px 0' }}>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={handleDemoDetect}
+              disabled={loading}
+            >
+              {loading ? 'Running demo...' : 'Try demo image'}
+            </button>
+            <button
+              onClick={handleDetect}
+              className="btn-primary"
+              disabled={!selectedFile || loading}
+            >
+              {loading ? 'Detecting Waves...' : 'Start Detection'}
+            </button>
+          </div>
+
           <div className="algorithm-selector">
             <label>Detection Algorithm</label>
             <select value={algorithm} onChange={(e) => setAlgorithm(e.target.value)}>
@@ -205,14 +247,6 @@ function Dashboard({ user, onLogout }) {
               onChange={(e) => setSensitivity(parseFloat(e.target.value))}
             />
           </div>
-
-          <button
-            onClick={handleDetect}
-            className="btn-primary"
-            disabled={!selectedFile || loading}
-          >
-            {loading ? 'Detecting Waves...' : 'Start Detection'}
-          </button>
 
           {detectionResult && (
             <div className="detection-result">
