@@ -11,9 +11,11 @@ from PIL import Image
 import io
 import sys
 import os
+import subprocess
 from datetime import datetime
 import pandas as pd
 from werkzeug.security import generate_password_hash, check_password_hash
+from typing import Optional
 
 # Add backend to path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'backend'))
@@ -21,26 +23,115 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'backend'))
 from backend.database import Database
 from backend.wave_detector import WaveDetector
 
-# Initialize session state
-if 'authenticated' not in st.session_state:
-    st.session_state.authenticated = False
-if 'user_id' not in st.session_state:
-    st.session_state.user_id = None
-if 'username' not in st.session_state:
-    st.session_state.username = None
-if 'db' not in st.session_state:
-    st.session_state.db = Database()
-    st.session_state.db.initialize()
-if 'detector' not in st.session_state:
-    st.session_state.detector = WaveDetector()
+DEFAULT_STREAMLIT_PORT = "8501"
+DEFAULT_STREAMLIT_ADDRESS = "localhost"
 
-# Page configuration
-st.set_page_config(
-    page_title="波浪检测系统",
-    page_icon="🌊",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+def _running_in_streamlit() -> bool:
+    """Check whether the script is executing inside a Streamlit runtime."""
+    try:
+        from streamlit.runtime import exists
+    except (ImportError, ModuleNotFoundError):
+        return False
+
+    return exists()
+
+
+def _get_cli_override(args, option_name: str) -> Optional[str]:
+    """Extract a value for a Streamlit CLI option (supports = or space separated)."""
+    for idx, arg in enumerate(args):
+        if arg.startswith(f"{option_name}="):
+            return arg.split("=", 1)[1]
+        if arg == option_name and idx + 1 < len(args):
+            return args[idx + 1]
+    return None
+
+
+def _filter_server_args(args):
+    """Remove server address/port args so we can re-apply normalized values once."""
+    filtered = []
+    skip_next = False
+    for arg in args:
+        if skip_next:
+            skip_next = False
+            continue
+        if arg in ("--server.port", "--server.address"):
+            skip_next = True
+            continue
+        if arg.startswith("--server.port=") or arg.startswith("--server.address="):
+            continue
+        filtered.append(arg)
+    return filtered
+
+
+def _bootstrap_streamlit():
+    """If executed directly, re-launch the app via `streamlit run`."""
+    script_path = os.path.abspath(__file__)
+    # Allow overriding defaults via environment for headless deployments
+    fallback_port = os.environ.get("STREAMLIT_SERVER_PORT", DEFAULT_STREAMLIT_PORT)
+    fallback_address = os.environ.get("STREAMLIT_SERVER_ADDRESS", DEFAULT_STREAMLIT_ADDRESS)
+    user_args = sys.argv[1:]
+
+    port_override = _get_cli_override(user_args, "--server.port")
+    address_override = _get_cli_override(user_args, "--server.address")
+
+    effective_port = port_override or fallback_port
+    effective_address = address_override or fallback_address
+    filtered_args = _filter_server_args(user_args)
+    cleaned_args = [arg for arg in filtered_args if arg.strip()]
+
+    print("⚡ 检测到直接运行 app.py，正在通过 Streamlit 启动应用...")
+    print("⚡ Detected direct execution of app.py, launching via Streamlit...")
+    print(f"🌐 配置的访问地址 / Configured URL: http://{effective_address}:{effective_port}")
+    if effective_address not in ("localhost", "127.0.0.1"):
+        print(f"💡 提示: 本机可使用 http://localhost:{effective_port} 访问")
+
+    cmd = [
+        sys.executable, "-m", "streamlit", "run", script_path,
+        "--server.port", effective_port,
+        "--server.address", effective_address
+    ]
+    cmd.extend(cleaned_args)
+
+    try:
+        result = subprocess.run(cmd, check=False)
+    except KeyboardInterrupt:
+        print("\n⏹️ Streamlit 已停止")
+        sys.exit(0)
+    except FileNotFoundError:
+        print("❌ 无法启动 Streamlit: 未找到可执行文件，请确认已安装依赖 (pip install -r requirements.txt)")
+        sys.exit(1)
+    except PermissionError as exc:
+        print(f"❌ 无法启动 Streamlit，权限不足: {exc}")
+        sys.exit(1)
+    except Exception as exc:
+        print(f"❌ 无法启动 Streamlit: {exc}")
+        sys.exit(1)
+
+    if result.returncode != 0:
+        print(f"❌ Streamlit 启动失败，返回码: {result.returncode}")
+        sys.exit(result.returncode)
+
+
+def initialize_app():
+    """Configure page and session state."""
+    st.set_page_config(
+        page_title="波浪检测系统",
+        page_icon="🌊",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
+
+    if 'authenticated' not in st.session_state:
+        st.session_state.authenticated = False
+    if 'user_id' not in st.session_state:
+        st.session_state.user_id = None
+    if 'username' not in st.session_state:
+        st.session_state.username = None
+    if 'db' not in st.session_state:
+        st.session_state.db = Database()
+        st.session_state.db.initialize()
+    if 'detector' not in st.session_state:
+        st.session_state.detector = WaveDetector()
 
 
 def login_page():
@@ -401,6 +492,7 @@ def profile_page():
 
 def main():
     """主应用程序"""
+    initialize_app()
 
     # Check authentication
     if not st.session_state.authenticated:
@@ -439,4 +531,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    if _running_in_streamlit():
+        main()
+    else:
+        _bootstrap_streamlit()
